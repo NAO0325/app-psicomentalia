@@ -64,48 +64,48 @@ async function cargarDatosEjemplo() {
     // Agregar tareas de ejemplo
     const tareas = [
       {
-        texto: 'Revisar correo electrónico',
-        categoria: 'trabajo',
-        prioridad: 'alta',
+        titulo: 'Revisar correo electrónico',
+        //categoria: 'trabajo',
+        //prioridad: 'alta',
         completada: false,
         userId,
-        fecha: new Date().toISOString(),
+        fecha: new Date().toISOString().split('T')[0],
         createdAt: new Date().toISOString()
       },
       {
-        texto: 'Hacer ejercicio 30 minutos',
-        categoria: 'salud',
-        prioridad: 'media',
+        titulo: 'Hacer ejercicio 30 minutos',
+        //categoria: 'salud',
+        //prioridad: 'media',
         completada: true,
         userId,
-        fecha: new Date().toISOString(),
+        fecha: new Date().toISOString().split('T')[0],
         createdAt: new Date().toISOString()
       },
       {
-        texto: 'Leer capítulo del libro',
-        categoria: 'personal',
-        prioridad: 'baja',
+        titulo: 'Leer capítulo del libro',
+        //categoria: 'personal',
+        //prioridad: 'baja',
         completada: false,
         userId,
-        fecha: new Date().toISOString(),
+        fecha: new Date().toISOString().split('T')[0],
         createdAt: new Date().toISOString()
       },
       {
-        texto: 'Preparar presentación',
-        categoria: 'trabajo',
-        prioridad: 'alta',
+        titulo: 'Preparar presentación',
+        //categoria: 'trabajo',
+        //prioridad: 'alta',
         completada: false,
         userId,
-        fecha: new Date().toISOString(),
+        fecha: new Date().toISOString().split('T')[0],
         createdAt: new Date().toISOString()
       },
       {
-        texto: 'Meditar 10 minutos',
-        categoria: 'salud',
-        prioridad: 'media',
+        titulo: 'Meditar 10 minutos',
+        //categoria: 'salud',
+        //prioridad: 'media',
         completada: true,
         userId,
-        fecha: new Date().toISOString(),
+        fecha: new Date().toISOString().split('T')[0],
         createdAt: new Date().toISOString()
       }
     ];

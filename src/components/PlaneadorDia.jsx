@@ -1,298 +1,315 @@
 // src/components/PlaneadorDia.jsx
-import React, { useState } from 'react';
-import { useFirebaseSync } from '../hooks/useFirebaseSync';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { db } from '../config/firebase';
+import { 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs, 
+  updateDoc, 
+  deleteDoc, 
+  doc,
+  orderBy 
+} from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 
 const PlaneadorDia = () => {
+  const { user } = useAuth();
+  const [tareas, setTareas] = useState([]);
   const [nuevaTarea, setNuevaTarea] = useState('');
-  const [categoria, setCategoria] = useState('personal');
-  const [prioridad, setPrioridad] = useState('media');
-  const [editando, setEditando] = useState(null);
-  
-  const { 
-    data: tareas, 
-    loading, 
-    addDocument, 
-    updateDocument, 
-    deleteDocument 
-  } = useFirebaseSync('tareas', []);
+  const [loading, setLoading] = useState(true);
+  const [agregando, setAgregando] = useState(false);
 
-  // Filtrar tareas de hoy
-  const tareasHoy = tareas.filter(tarea => {
-    const fechaTarea = new Date(tarea.fecha || tarea.createdAt);
-    const hoy = new Date();
-    return fechaTarea.toDateString() === hoy.toDateString();
-  });
-
-  const handleAgregarTarea = async (e) => {
-    e.preventDefault();
-    
-    if (!nuevaTarea.trim()) return;
-    
-    const tarea = {
-      texto: nuevaTarea,
-      categoria,
-      prioridad,
-      completada: false,
-      fecha: new Date().toISOString()
+  // Obtener fecha actual formateada
+  const getFechaActual = () => {
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
     };
-    
-    await addDocument(tarea);
-    
-    // Limpiar formulario
-    setNuevaTarea('');
-    setCategoria('personal');
-    setPrioridad('media');
+    return new Date().toLocaleDateString('es-ES', options);
   };
 
-  const toggleCompletada = async (tarea) => {
-    await updateDocument(tarea.id, {
-      completada: !tarea.completada,
-      completadaEn: !tarea.completada ? new Date().toISOString() : null
-    });
+  // Obtener día del mes
+  const getDiaDelMes = () => {
+    return new Date().getDate();
   };
 
-  const handleEliminar = async (id) => {
-    if (window.confirm('¿Estás seguro de eliminar esta tarea?')) {
-      await deleteDocument(id);
+  // Cargar tareas del día
+  useEffect(() => {
+    if (user) {
+      cargarTareas();
+    }
+  }, [user]);
+
+  const cargarTareas = async () => {
+    try {
+      setLoading(true);
+      const fechaHoy = new Date().toISOString().split('T')[0];
+
+      console.log('📥 Cargando tareas para:', fechaHoy);
+      
+      const q = query(
+        collection(db, 'tareas'),
+        where('userId', '==', user.uid),
+        where('fecha', '==', fechaHoy),
+        orderBy('createdAt', 'desc')
+      );
+
+      const querySnapshot = await getDocs(q);
+      const tareasData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      console.log('📥 Tareas cargadas:', tareasData);
+
+      setTareas(tareasData);
+    } catch (error) {
+      console.error('Error al cargar tareas:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleEditar = (tarea) => {
-    setEditando(tarea.id);
-    setNuevaTarea(tarea.texto);
-    setCategoria(tarea.categoria);
-    setPrioridad(tarea.prioridad);
-  };
-
-  const handleActualizar = async (e) => {
+  const agregarTarea = async (e) => {
     e.preventDefault();
     
     if (!nuevaTarea.trim()) return;
-    
-    await updateDocument(editando, {
-      texto: nuevaTarea,
-      categoria,
-      prioridad
-    });
-    
-    // Limpiar formulario
-    setEditando(null);
-    setNuevaTarea('');
-    setCategoria('personal');
-    setPrioridad('media');
+
+    try {
+      setAgregando(true);
+      const fechaHoy = new Date().toISOString().split('T')[0];
+
+      const nuevaTareaDoc = {
+        userId: user.uid,
+        titulo: nuevaTarea,
+        completada: false,
+        fecha: fechaHoy,
+        createdAt: new Date().toISOString()
+      };
+
+      const docRef = await addDoc(collection(db, 'tareas'), nuevaTareaDoc);
+      
+      setTareas([{ id: docRef.id, ...nuevaTareaDoc }, ...tareas]);
+      setNuevaTarea('');
+    } catch (error) {
+      console.error('Error al agregar tarea:', error);
+    } finally {
+      setAgregando(false);
+    }
   };
 
-  const calcularProgreso = () => {
-    if (tareasHoy.length === 0) return 0;
-    const completadas = tareasHoy.filter(t => t.completada).length;
-    return Math.round((completadas / tareasHoy.length) * 100);
+  const toggleTarea = async (tareaId, completada) => {
+    try {
+      const tareaRef = doc(db, 'tareas', tareaId);
+      await updateDoc(tareaRef, {
+        completada: !completada
+      });
+
+      setTareas(tareas.map(t => 
+        t.id === tareaId ? { ...t, completada: !completada } : t
+      ));
+    } catch (error) {
+      console.error('Error al actualizar tarea:', error);
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="planeador-loading">
-        <div className="spinner"></div>
-        <p>Cargando tareas...</p>
-      </div>
-    );
-  }
+  const eliminarTarea = async (tareaId) => {
+    if (!window.confirm('¿Estás seguro de eliminar esta tarea?')) return;
+
+    try {
+      await deleteDoc(doc(db, 'tareas', tareaId));
+      setTareas(tareas.filter(t => t.id !== tareaId));
+    } catch (error) {
+      console.error('Error al eliminar tarea:', error);
+    }
+  };
+
+  // Calcular estadísticas
+  const tareasCompletadas = tareas.filter(t => t.completada).length;
+  const tareasPendientes = tareas.filter(t => !t.completada).length;
+  const progresoDelDia = tareas.length > 0 
+    ? Math.round((tareasCompletadas / tareas.length) * 100) 
+    : 0;
 
   return (
     <div className="planeador-container">
+      {/* Header con fecha */}
       <div className="planeador-header">
-        <h2>📅 Mi Día</h2>
-        <div className="fecha-actual">
-          {new Date().toLocaleDateString('es-ES', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
-        </div>
-      </div>
-
-      {/* Barra de progreso */}
-      <div className="progreso-container">
-        <div className="progreso-info">
-          <span>Progreso del día</span>
-          <span>{calcularProgreso()}%</span>
-        </div>
-        <div className="progreso-barra">
-          <div 
-            className="progreso-fill"
-            style={{ width: `${calcularProgreso()}%` }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Formulario para agregar/editar tarea */}
-      <form 
-        onSubmit={editando ? handleActualizar : handleAgregarTarea}
-        className="tarea-form"
-      >
-        <input
-          type="text"
-          placeholder="¿Qué necesitas hacer hoy?"
-          value={nuevaTarea}
-          onChange={(e) => setNuevaTarea(e.target.value)}
-          className="tarea-input"
-          autoFocus
-        />
+        <Link to="/" className="back-link">
+          ← Volver al menú
+        </Link>
         
-        <div className="tarea-opciones">
-          <select
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            className="select-categoria"
-          >
-            <option value="personal">🏠 Personal</option>
-            <option value="trabajo">💼 Trabajo</option>
-            <option value="salud">💪 Salud</option>
-            <option value="estudio">📚 Estudio</option>
-            <option value="social">👥 Social</option>
-          </select>
+        <div className="planeador-title-section">
+          <div className="date-badge">
+            <span className="date-icon">📅</span>
+            <span className="date-number">{getDiaDelMes()}</span>
+          </div>
           
-          <select
-            value={prioridad}
-            onChange={(e) => setPrioridad(e.target.value)}
-            className="select-prioridad"
-          >
-            <option value="alta">🔴 Alta</option>
-            <option value="media">🟡 Media</option>
-            <option value="baja">🟢 Baja</option>
-          </select>
-          
-          <button type="submit" className="btn-agregar">
-            {editando ? '✏️ Actualizar' : '➕ Agregar'}
-          </button>
-          
-          {editando && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditando(null);
-                setNuevaTarea('');
-                setCategoria('personal');
-                setPrioridad('media');
-              }}
-              className="btn-cancelar"
-            >
-              ❌ Cancelar
-            </button>
-          )}
+          <div className="title-content">
+            <h1>📅 Planeador del Día</h1>
+            <p className="date-subtitle">{getFechaActual()}</p>
+          </div>
         </div>
-      </form>
+
+        {/* Progreso del día */}
+        <div className="progreso-dia">
+          <div className="progreso-header">
+            <span>Progreso del día</span>
+            <span className="progreso-percent">{progresoDelDia}%</span>
+          </div>
+          <div className="progreso-bar">
+            <div 
+              className="progreso-fill" 
+              style={{ width: `${progresoDelDia}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Formulario agregar tarea */}
+      <div className="agregar-tarea-section">
+        <form onSubmit={agregarTarea} className="agregar-tarea-form">
+          <input
+            type="text"
+            value={nuevaTarea}
+            onChange={(e) => setNuevaTarea(e.target.value)}
+            placeholder="Agrega una nueva tarea..."
+            disabled={agregando}
+            className="tarea-input"
+          />
+          <button 
+            type="submit" 
+            disabled={agregando || !nuevaTarea.trim()}
+            className="btn-agregar"
+            aria-label="Agregar tarea"
+          >
+            <span>+</span>
+          </button>
+        </form>
+      </div>
 
       {/* Lista de tareas */}
-      <div className="tareas-lista">
-        {tareasHoy.length === 0 ? (
-          <div className="sin-tareas">
-            <p>🎯 No tienes tareas para hoy</p>
-            <p>¡Agrega una para comenzar!</p>
+      <div className="tareas-content">
+        {loading ? (
+          <div className="loading-state">
+            <div className="spinner-large"></div>
+            <p>Cargando tareas...</p>
+          </div>
+        ) : tareas.length === 0 ? (
+          <div className="empty-state">
+            <div className="empty-icon">📝</div>
+            <p>No hay tareas todavía. ¡Agrega tu primera tarea!</p>
           </div>
         ) : (
           <>
-            {/* Tareas pendientes */}
-            <div className="tareas-seccion">
-              <h3>📋 Pendientes</h3>
-              {tareasHoy
-                .filter(t => !t.completada)
-                .sort((a, b) => {
-                  const prioridadOrden = { alta: 0, media: 1, baja: 2 };
-                  return prioridadOrden[a.prioridad] - prioridadOrden[b.prioridad];
-                })
-                .map(tarea => (
-                  <div key={tarea.id} className={`tarea-item prioridad-${tarea.prioridad}`}>
-                    <input
-                      type="checkbox"
-                      checked={tarea.completada}
-                      onChange={() => toggleCompletada(tarea)}
-                      className="tarea-checkbox"
-                    />
-                    <div className="tarea-contenido">
-                      <span className="tarea-texto">{tarea.texto}</span>
-                      <div className="tarea-meta">
-                        <span className="tarea-categoria">{tarea.categoria}</span>
-                        <span className="tarea-prioridad">{tarea.prioridad}</span>
-                      </div>
-                    </div>
-                    <div className="tarea-acciones">
-                      <button
-                        onClick={() => handleEditar(tarea)}
-                        className="btn-editar"
-                        title="Editar"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => handleEliminar(tarea.id)}
-                        className="btn-eliminar"
-                        title="Eliminar"
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  </div>
-                ))}
-            </div>
-
-            {/* Tareas completadas */}
-            {tareasHoy.some(t => t.completada) && (
-              <div className="tareas-seccion completadas">
-                <h3>✅ Completadas</h3>
-                {tareasHoy
-                  .filter(t => t.completada)
-                  .map(tarea => (
-                    <div key={tarea.id} className="tarea-item tarea-completada">
-                      <input
-                        type="checkbox"
-                        checked={tarea.completada}
-                        onChange={() => toggleCompletada(tarea)}
-                        className="tarea-checkbox"
-                      />
-                      <div className="tarea-contenido">
-                        <span className="tarea-texto">{tarea.texto}</span>
-                        <div className="tarea-meta">
-                          <span className="tarea-categoria">{tarea.categoria}</span>
-                          {tarea.completadaEn && (
-                            <span className="tarea-hora">
-                              Completada: {new Date(tarea.completadaEn).toLocaleTimeString('es-ES', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </span>
-                          )}
+            {/* Sección: Pendientes */}
+            {tareasPendientes > 0 && (
+              <div className="tareas-section">
+                <div className="section-header">
+                  <span className="section-icon">📋</span>
+                  <h2>Pendientes</h2>
+                  <span className="section-count">{tareasPendientes}</span>
+                </div>
+                
+                <div className="tareas-list">
+                  {tareas
+                    .filter(t => !t.completada)
+                    .map(tarea => (
+                      <div key={tarea.id} className="tarea-item">
+                        <div className="tarea-checkbox-wrapper">
+                          <input
+                            type="checkbox"
+                            checked={tarea.completada}
+                            onChange={() => toggleTarea(tarea.id, tarea.completada)}
+                            className="tarea-checkbox"
+                            id={`tarea-${tarea.id}`}
+                          />
+                          <label htmlFor={`tarea-${tarea.id}`} className="checkbox-label"></label>
                         </div>
+                        
+                        <div className="tarea-content">
+                          <span className="tarea-titulo">{tarea.titulo}</span>
+                        </div>
+                        
+                        <button
+                          onClick={() => eliminarTarea(tarea.id)}
+                          className="btn-eliminar"
+                          aria-label="Eliminar tarea"
+                        >
+                          🗑️
+                        </button>
                       </div>
-                      <button
-                        onClick={() => handleEliminar(tarea.id)}
-                        className="btn-eliminar"
-                        title="Eliminar"
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sección: Completadas */}
+            {tareasCompletadas > 0 && (
+              <div className="tareas-section completadas-section">
+                <div className="section-header">
+                  <span className="section-icon">✅</span>
+                  <h2>Completadas</h2>
+                  <span className="section-count">{tareasCompletadas}</span>
+                </div>
+                
+                <div className="tareas-list">
+                  {tareas
+                    .filter(t => t.completada)
+                    .map(tarea => (
+                      <div key={tarea.id} className="tarea-item tarea-completada">
+                        <div className="tarea-checkbox-wrapper">
+                          <input
+                            type="checkbox"
+                            checked={tarea.completada}
+                            onChange={() => toggleTarea(tarea.id, tarea.completada)}
+                            className="tarea-checkbox"
+                            id={`tarea-${tarea.id}`}
+                          />
+                          <label htmlFor={`tarea-${tarea.id}`} className="checkbox-label"></label>
+                        </div>
+                        
+                        <div className="tarea-content">
+                          <span className="tarea-titulo">{tarea.titulo}</span>
+                        </div>
+                        
+                        <button
+                          onClick={() => eliminarTarea(tarea.id)}
+                          className="btn-eliminar"
+                          aria-label="Eliminar tarea"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    ))}
+                </div>
               </div>
             )}
           </>
         )}
       </div>
 
-      {/* Estadísticas rápidas */}
-      {tareasHoy.length > 0 && (
-        <div className="estadisticas-rapidas">
-          <div className="stat-item">
-            <span className="stat-valor">{tareasHoy.length}</span>
-            <span className="stat-label">Total</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-valor">{tareasHoy.filter(t => t.completada).length}</span>
-            <span className="stat-label">Completadas</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-valor">{tareasHoy.filter(t => !t.completada).length}</span>
-            <span className="stat-label">Pendientes</span>
+      {/* Resumen del día */}
+      {tareas.length > 0 && (
+        <div className="resumen-dia">
+          <div className="resumen-stats">
+            <div className="stat-item">
+              <span className="stat-number">{tareas.length}</span>
+              <span className="stat-label">Total</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{tareasCompletadas}</span>
+              <span className="stat-label">Completadas</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-number">{tareasPendientes}</span>
+              <span className="stat-label">Pendientes</span>
+            </div>
           </div>
         </div>
       )}
