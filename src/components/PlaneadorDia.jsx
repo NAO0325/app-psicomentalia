@@ -50,8 +50,6 @@ const PlaneadorDia = () => {
       setLoading(true);
       const fechaHoy = new Date().toISOString().split('T')[0];
 
-      console.log('📥 Cargando tareas para:', fechaHoy);
-      
       const q = query(
         collection(db, 'tareas'),
         where('userId', '==', user.uid),
@@ -64,8 +62,6 @@ const PlaneadorDia = () => {
         id: doc.id,
         ...doc.data()
       }));
-
-      console.log('📥 Tareas cargadas:', tareasData);
 
       setTareas(tareasData);
     } catch (error) {

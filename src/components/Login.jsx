@@ -9,8 +9,15 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const { login, loginWithGoogle } = useAuth();
+  const { user, login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  // Si el usuario ya está autenticado, redirigir al dashboard
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   // Limpiar error después de 5 segundos
   useEffect(() => {
@@ -34,10 +41,8 @@ const Login = () => {
 
     try {
       await login(email, password);
-      // Pequeño delay antes de navegar para asegurar que el estado se actualice
-      setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 100);
+      // No navegamos manualmente aquí
+      // El useEffect de arriba detectará el cambio de user y navegará
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       
@@ -59,7 +64,6 @@ const Login = () => {
       }
       
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
   };
@@ -70,10 +74,8 @@ const Login = () => {
 
     try {
       await loginWithGoogle();
-      // Pequeño delay antes de navegar
-      setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 100);
+      // No navegamos manualmente aquí
+      // El useEffect de arriba detectará el cambio de user y navegará
     } catch (error) {
       console.error('Error con Google:', error);
       
@@ -88,7 +90,6 @@ const Login = () => {
       }
       
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
   };
@@ -187,8 +188,7 @@ const Login = () => {
 
         <div className="login-footer">
           <p>
-            ¿No tienes cuenta? 
-            <Link to="/registro"> Regístrate aquí</Link>
+            ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
           </p>
           <Link to="/reset-password" className="forgot-password">
             ¿Olvidaste tu contraseña?

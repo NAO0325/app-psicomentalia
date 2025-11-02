@@ -25,7 +25,24 @@ const RutaProtegida = ({ children }) => {
     );
   }
   
-  return user ? children : <Navigate to="/login" />;
+  return user ? children : <Navigate to="/login" replace />;
+};
+
+// Componente para rutas públicas (como login/registro)
+// Redirige al dashboard si el usuario ya está autenticado
+const RutaPublica = ({ children }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner-large"></div>
+        <p>Cargando...</p>
+      </div>
+    );
+  }
+  
+  return user ? <Navigate to="/" replace /> : children;
 };
 
 // Layout principal con navegación
@@ -40,71 +57,91 @@ const Layout = ({ children }) => {
   );
 };
 
+function AppRoutes() {
+  return (
+    <Routes>
+      {/* Rutas públicas */}
+      <Route
+        path="/login"
+        element={
+          <RutaPublica>
+            <Login />
+          </RutaPublica>
+        }
+      />
+      <Route
+        path="/registro"
+        element={
+          <RutaPublica>
+            <Registro />
+          </RutaPublica>
+        }
+      />
+      
+      {/* Rutas protegidas */}
+      <Route
+        path="/"
+        element={
+          <RutaProtegida>
+            <Layout>
+              <Dashboard />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/planeador"
+        element={
+          <RutaProtegida>
+            <Layout>
+              <PlaneadorDia />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/diario"
+        element={
+          <RutaProtegida>
+            <Layout>
+              <DiarioReflexion />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/tips"
+        element={
+          <RutaProtegida>
+            <Layout>
+              <TipsBienestar />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      <Route
+        path="/perfil"
+        element={
+          <RutaProtegida>
+            <Layout>
+              <Perfil />
+            </Layout>
+          </RutaProtegida>
+        }
+      />
+      
+      {/* Ruta por defecto */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="app">
-          <Routes>
-            {/* Rutas públicas */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Registro />} />
-            
-            {/* Rutas protegidas */}
-            <Route
-              path="/"
-              element={
-                <RutaProtegida>
-                  <Layout>
-                    <Dashboard />
-                  </Layout>
-                </RutaProtegida>
-              }
-            />
-            <Route
-              path="/planeador"
-              element={
-                <RutaProtegida>
-                  <Layout>
-                    <PlaneadorDia />
-                  </Layout>
-                </RutaProtegida>
-              }
-            />
-            <Route
-              path="/diario"
-              element={
-                <RutaProtegida>
-                  <Layout>
-                    <DiarioReflexion />
-                  </Layout>
-                </RutaProtegida>
-              }
-            />
-            <Route
-              path="/tips"
-              element={
-                <RutaProtegida>
-                  <Layout>
-                    <TipsBienestar />
-                  </Layout>
-                </RutaProtegida>
-              }
-            />
-            <Route
-              path="/perfil"
-              element={
-                <RutaProtegida>
-                  <Layout>
-                    <Perfil />
-                  </Layout>
-                </RutaProtegida>
-              }
-            />
-            
-            {/* Ruta por defecto */}
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
+          <AppRoutes />
         </div>
       </Router>
     </AuthProvider>
