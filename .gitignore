@@ -1,0 +1,6 @@
+.env.development
+EMULATOR_GUIDE.md
+INICIO_RAPIDO.md
+firestore-debug.log
+node_modules/
+setup-local.sh
