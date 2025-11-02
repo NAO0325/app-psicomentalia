@@ -1,6 +1,5 @@
 // src/components/TipsBienestar.jsx
 import React, { useState } from 'react';
-import './TipsBienestar.css';
 
 const TipsBienestar = () => {
   const [categoriaActiva, setCategoriaActiva] = useState('todos');

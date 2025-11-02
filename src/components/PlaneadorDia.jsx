@@ -1,7 +1,6 @@
 // src/components/PlaneadorDia.jsx
 import React, { useState } from 'react';
 import { useFirebaseSync } from '../hooks/useFirebaseSync';
-import './PlaneadorDia.css';
 
 const PlaneadorDia = () => {
   const [nuevaTarea, setNuevaTarea] = useState('');

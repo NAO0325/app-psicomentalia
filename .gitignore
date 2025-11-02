@@ -1,4 +1,4 @@
-.env.development
+.env
 EMULATOR_GUIDE.md
 INICIO_RAPIDO.md
 firestore-debug.log

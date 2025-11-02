@@ -1,0 +1,323 @@
+/* ==================== Auth Container ==================== */
+.login-container,
+.registro-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: var(--spacing-lg);
+  animation: fadeIn var(--transition-slow);
+}
+
+.login-card,
+.registro-card {
+  background: white;
+  padding: var(--spacing-2xl);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 450px;
+  animation: slideUp var(--transition-normal);
+}
+
+/* ==================== Auth Header ==================== */
+.login-header,
+.registro-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.login-header h1,
+.registro-header h1 {
+  font-size: var(--font-size-3xl);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.login-header p,
+.registro-header p {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+}
+
+/* ==================== Auth Form ==================== */
+.login-form,
+.registro-form {
+  margin-top: var(--spacing-xl);
+}
+
+.login-form h2,
+.registro-form h2 {
+  font-size: var(--font-size-2xl);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.login-form .form-group,
+.registro-form .form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.login-form label,
+.registro-form label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.login-form input,
+.registro-form input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+}
+
+.login-form input:focus,
+.registro-form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+.login-form input:disabled,
+.registro-form input:disabled {
+  background: var(--bg-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ==================== Auth Buttons ==================== */
+.login-form .btn-primary,
+.registro-form .btn-primary {
+  width: 100%;
+  padding: 14px;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-top: var(--spacing-md);
+}
+
+.btn-google {
+  width: 100%;
+  padding: 14px;
+  background: white;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.btn-google:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-google:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-google img {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==================== Divider ==================== */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: var(--spacing-lg) 0;
+  color: var(--text-secondary);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.divider span {
+  padding: 0 var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+/* ==================== Auth Footer ==================== */
+.login-footer,
+.registro-footer {
+  margin-top: var(--spacing-xl);
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.login-footer a,
+.registro-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.login-footer a:hover,
+.registro-footer a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.forgot-password {
+  display: block;
+  margin-top: var(--spacing-sm);
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+}
+
+.forgot-password:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* ==================== Dev Info ==================== */
+.dev-info {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-sm);
+  border-left: 4px solid var(--info-color);
+}
+
+.dev-info p {
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.dev-info code {
+  display: block;
+  padding: var(--spacing-sm);
+  background: white;
+  border-radius: var(--border-radius-sm);
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+  color: var(--primary-color);
+}
+
+/* ==================== Password Strength ==================== */
+.password-strength {
+  margin-top: var(--spacing-sm);
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  transition: width var(--transition-normal), background var(--transition-normal);
+}
+
+.password-strength-bar.weak {
+  width: 33%;
+  background: var(--danger-color);
+}
+
+.password-strength-bar.medium {
+  width: 66%;
+  background: var(--warning-color);
+}
+
+.password-strength-bar.strong {
+  width: 100%;
+  background: var(--success-color);
+}
+
+.password-requirements {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.password-requirements ul {
+  margin-top: var(--spacing-xs);
+  padding-left: var(--spacing-lg);
+}
+
+.password-requirements li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.password-requirements li.met {
+  color: var(--success-color);
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+  .login-container,
+  .registro-container {
+    padding: var(--spacing-md);
+  }
+
+  .login-card,
+  .registro-card {
+    padding: var(--spacing-xl);
+  }
+
+  .login-header h1,
+  .registro-header h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .login-form h2,
+  .registro-form h2 {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* ==================== Loading State ==================== */
+.auth-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.auth-loading .spinner-small {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+}
+
+/* ==================== Terms and Privacy ==================== */
+.terms-privacy {
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.5;
+}
+
+.terms-privacy a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.terms-privacy a:hover {
+  text-decoration: underline;
+}

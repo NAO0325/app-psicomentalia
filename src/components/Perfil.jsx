@@ -1,7 +1,6 @@
 // src/components/Perfil.jsx
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import './Perfil.css';
 
 const Perfil = () => {
   const { user, logout } = useAuth();

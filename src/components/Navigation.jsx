@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import './Navigation.css';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,86 +17,82 @@ const Navigation = () => {
     }
   };
 
-  const menuItems = [
-    { path: '/', label: 'Inicio', icon: '🏠' },
-    { path: '/planeador', label: 'Planeador', icon: '📅' },
-    { path: '/diario', label: 'Diario', icon: '📔' },
-    { path: '/tips', label: 'Tips', icon: '💡' },
-    { path: '/perfil', label: 'Perfil', icon: '👤' }
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeSidebar = () => {
+    if (window.innerWidth <= 768) {
+      setIsOpen(false);
+    }
+  };
+
+  const navItems = [
+    { path: '/', icon: '🏠', label: 'Dashboard' },
+    { path: '/planeador', icon: '📅', label: 'Planeador del Día' },
+    { path: '/diario', icon: '📔', label: 'Diario de Reflexión' },
+    { path: '/tips', icon: '💡', label: 'Tips de Bienestar' },
+    { path: '/perfil', icon: '👤', label: 'Mi Perfil' },
   ];
 
   return (
     <>
-      {/* Botón móvil */}
-      <button 
-        className="nav-toggle"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle navigation"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
+      {/* Toggle button para móvil */}
+      <button className="nav-toggle" onClick={toggleSidebar} aria-label="Abrir menú">
+        <span className="icon">☰</span>
       </button>
 
-      {/* Navegación lateral */}
-      <nav className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
+      {/* Overlay para cerrar el sidebar en móvil */}
+      <div 
+        className={`sidebar-overlay ${isOpen ? 'active' : ''}`}
+        onClick={closeSidebar}
+      />
+
+      {/* Sidebar */}
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        {/* Header del sidebar */}
         <div className="sidebar-header">
-          <h2>🧠 TDAH Tools</h2>
-          <button 
-            className="close-btn"
-            onClick={() => setIsOpen(false)}
-            aria-label="Close navigation"
-          >
-            ×
-          </button>
+          <h2>🧠 Herramientas TDAH</h2>
+          <p>Tu apoyo diario</p>
         </div>
 
-        <div className="user-info">
-          <div className="user-avatar">
-            {user?.photoURL ? (
-              <img src={user.photoURL} alt="Avatar" />
-            ) : (
-              <span>{user?.email?.[0]?.toUpperCase() || 'U'}</span>
-            )}
+        {/* Información del usuario */}
+        {user && (
+          <div className="user-info">
+            <div className="user-avatar">
+              {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
+            </div>
+            <div className="user-details">
+              <h4>{user.displayName || 'Usuario'}</h4>
+              <span>{user.email}</span>
+            </div>
           </div>
-          <div className="user-details">
-            <p className="user-name">{user?.displayName || 'Usuario'}</p>
-            <p className="user-email">{user?.email}</p>
-          </div>
-        </div>
+        )}
 
-        <ul className="nav-menu">
-          {menuItems.map((item) => (
-            <li key={item.path}>
-              <NavLink 
-                to={item.path}
-                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
-                onClick={() => setIsOpen(false)}
-              >
-                <span className="nav-icon">{item.icon}</span>
-                <span className="nav-label">{item.label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+        {/* Menú de navegación */}
+        <nav>
+          <ul className="nav-menu">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  onClick={closeSidebar}
+                >
+                  <span className="icon">{item.icon}</span>
+                  <span>{item.label}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-        <div className="sidebar-footer">
-          <button 
-            onClick={handleLogout}
-            className="logout-btn"
-          >
-            🚪 Cerrar Sesión
-          </button>
-        </div>
-      </nav>
-
-      {/* Overlay para móvil */}
-      {isOpen && (
-        <div 
-          className="sidebar-overlay"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+        {/* Botón de cerrar sesión */}
+        <button onClick={handleLogout} className="btn btn-danger logout-btn">
+          <span>🚪</span>
+          <span>Cerrar Sesión</span>
+        </button>
+      </aside>
     </>
   );
 };
