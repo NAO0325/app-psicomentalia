@@ -1,0 +1,43 @@
+/* src/App.css */
+
+.app {
+  min-height: 100vh;
+  background: var(--light-bg);
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-content {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  margin-left: 250px; /* Espacio para navegación lateral */
+  transition: margin-left 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-content {
+    margin-left: 0;
+    padding: 15px;
+  }
+}
+
+/* Animaciones de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}

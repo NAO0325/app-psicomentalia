@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // En desarrollo local, permitir todo (solo para emulador)
+    // IMPORTANTE: NO usar estas reglas en producción
+    
+    // Regla permisiva para desarrollo
+    match /{document=**} {
+      allow read, write: if true;
+    }
+    
+    // O si prefieres reglas más realistas incluso en desarrollo:
+    /*
+    // Usuarios pueden leer/escribir sus propios datos
+    match /usuarios/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Tareas: solo el dueño puede acceder
+    match /tareas/{taskId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null 
+        && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // Diarios: solo el dueño puede acceder
+    match /diarios/{entryId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null 
+        && request.auth.uid == request.resource.data.userId;
+    }
+    */
+  }
+}
