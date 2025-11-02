@@ -4,3 +4,4 @@ INICIO_RAPIDO.md
 firestore-debug.log
 node_modules/
 setup-local.sh
+package-lock.json
