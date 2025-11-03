@@ -1,0 +1,360 @@
+/* ==============================================
+   ANIMACIONES DE TRANSICIÓN ENTRE PÁGINAS
+   ============================================== */
+
+/* Fade In Animation - Aparición suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide From Bottom - Deslizar desde abajo */
+@keyframes slideFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide From Right - Deslizar desde la derecha */
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale In - Zoom suave */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Blur Fade - Desenfoque que se aclara */
+@keyframes blurFade {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* ==============================================
+   APLICAR ANIMACIONES A LAS PÁGINAS
+   ============================================== */
+
+/* Login y Registro - Fade In suave */
+.login-container,
+.registro-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Dashboard - Slide desde abajo */
+.dashboard-container {
+  animation: slideFromBottom 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Componentes principales - Fade In */
+.planeador-container,
+.diario-container,
+.tips-container,
+.perfil-container {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Cards individuales - Animación escalonada */
+.widget-card {
+  animation: slideFromBottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: backwards;
+}
+
+.widget-card:nth-child(1) { animation-delay: 0.1s; }
+.widget-card:nth-child(2) { animation-delay: 0.2s; }
+.widget-card:nth-child(3) { animation-delay: 0.3s; }
+.widget-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Tareas - Animación individual */
+.task-item {
+  animation: slideFromRight 0.3s ease-out;
+  animation-fill-mode: backwards;
+}
+
+.task-item:nth-child(1) { animation-delay: 0.05s; }
+.task-item:nth-child(2) { animation-delay: 0.1s; }
+.task-item:nth-child(3) { animation-delay: 0.15s; }
+.task-item:nth-child(4) { animation-delay: 0.2s; }
+.task-item:nth-child(5) { animation-delay: 0.25s; }
+
+/* Tips cards - Scale In */
+.tip-card {
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation-fill-mode: backwards;
+}
+
+.tip-card:nth-child(1) { animation-delay: 0.1s; }
+.tip-card:nth-child(2) { animation-delay: 0.2s; }
+.tip-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* ==============================================
+   TRANSICIONES EN BOTONES Y ELEMENTOS
+   ============================================== */
+
+/* Botones - Hover suave */
+.btn {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* Cards - Hover elevation */
+.card,
+.task-item,
+.tip-card,
+.widget-card {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover,
+.widget-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Inputs - Focus suave */
+input,
+textarea,
+select {
+  transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+}
+
+/* ==============================================
+   LOADING STATES CON ANIMACIÓN
+   ============================================== */
+
+/* Spinner con fade */
+.loading-screen {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Skeleton loading - Pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ==============================================
+   TRANSICIONES DE NAVEGACIÓN
+   ============================================== */
+
+/* Sidebar - Slide In */
+.sidebar {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+/* Navigation items */
+.nav-item {
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  transform: translateX(4px);
+  background: rgba(79, 70, 229, 0.1);
+}
+
+/* ==============================================
+   MODALES Y OVERLAYS
+   ============================================== */
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-overlay {
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  animation: modalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==============================================
+   SMOOTH SCROLL
+   ============================================== */
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* ==============================================
+   REDUCIR MOVIMIENTO (Accessibility)
+   ============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==============================================
+   PAGE TRANSITION WRAPPER
+   ============================================== */
+
+/* Contenedor general para todas las páginas */
+.page-transition {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* App content con transición */
+.app-content {
+  position: relative;
+}
+
+.app-content > * {
+  animation: slideFromBottom 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==============================================
+   ALERTAS Y NOTIFICACIONES
+   ============================================== */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* ==============================================
+   EFECTOS ESPECIALES
+   ============================================== */
+
+/* Ripple effect en botones */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::after {
+  width: 200px;
+  height: 200px;
+  opacity: 0;
+}
+
+/* Shine effect en hover */
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.widget-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.widget-card:hover::before {
+  left: 100%;
+}

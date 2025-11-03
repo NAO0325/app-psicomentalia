@@ -1,0 +1,144 @@
+/* src/components/PageTransition.css */
+
+/* Contenedor de la página */
+.page-wrapper {
+  width: 100%;
+}
+
+/* ==============================================
+   OPCIÓN 1: FADE (Desvanecimiento suave)
+   ============================================== */
+
+/* Entrada */
+.page-enter {
+  opacity: 0;
+}
+
+.page-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in-out;
+}
+
+/* Salida */
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+/* ==============================================
+   OPCIÓN 2: SLIDE (Deslizamiento lateral)
+   Para usarla, cambia las clases en el código
+   ============================================== */
+
+.page-slide-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.page-slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 400ms ease-out, transform 400ms ease-out;
+}
+
+.page-slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 400ms ease-in, transform 400ms ease-in;
+}
+
+/* ==============================================
+   OPCIÓN 3: SCALE + FADE (Zoom suave)
+   ============================================== */
+
+.page-scale-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.page-scale-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 400ms ease-out, transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-scale-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.page-scale-exit-active {
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 300ms ease-in, transform 300ms ease-in;
+}
+
+/* ==============================================
+   OPCIÓN 4: SLIDE FROM BOTTOM (Desde abajo)
+   ============================================== */
+
+.page-bottom-enter {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.page-bottom-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 500ms ease-out, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-bottom-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-bottom-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms ease-in, transform 300ms ease-in;
+}
+
+/* ==============================================
+   OPCIÓN 5: BLUR + FADE (Desenfoque elegante)
+   ============================================== */
+
+.page-blur-enter {
+  opacity: 0;
+  filter: blur(10px);
+}
+
+.page-blur-enter-active {
+  opacity: 1;
+  filter: blur(0);
+  transition: opacity 600ms ease-out, filter 600ms ease-out;
+}
+
+.page-blur-exit {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.page-blur-exit-active {
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity 400ms ease-in, filter 400ms ease-in;
+}
+
+/* ==============================================
+   PREVENIR SCROLL DURANTE TRANSICIÓN
+   ============================================== */
+
+.page-transition-in-progress {
+  overflow: hidden;
+  height: 100vh;
+}
