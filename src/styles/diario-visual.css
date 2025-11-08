@@ -1,4 +1,4 @@
-/* ==================== Diario de Reflexión - Estilo Versión 5 ==================== */
+/* ==================== Diario de Reflexión - Estilo Versión 5 MEJORADO ==================== */
 
 .diario-container {
   max-width: 800px;
@@ -30,24 +30,34 @@
   gap: var(--spacing-sm);
 }
 
+/* ==================== Botón Nueva Entrada (MEJORADO) ==================== */
 .btn-vista {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: 10px 20px;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: 12px 24px;
   background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   border: none;
   border-radius: var(--border-radius-sm);
   font-weight: 600;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   cursor: pointer;
   transition: all var(--transition-normal);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  min-width: 160px;
 }
 
 .btn-vista:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+}
+
+.btn-vista:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 /* ==================== Estadísticas ==================== */
@@ -142,37 +152,168 @@
   resize: vertical;
 }
 
-/* Selector de Emoción */
+/* ==================== Selector de Emociones ==================== */
 .emocion-selector {
-  display: flex;
-  gap: var(--spacing-sm);
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
 }
 
 .emocion-btn {
-  flex: 1;
-  padding: 12px 8px;
-  border: 2px solid var(--border-color);
-  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-lg);
+  border: 3px solid transparent;
+  border-radius: var(--border-radius-lg);
   background: white;
-  font-size: 1.5rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  position: relative;
 }
 
+/* El emoji dentro del botón */
+.emocion-btn .emoji {
+  font-size: 3.5rem;
+  display: block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: grayscale(0.3);
+}
+
+/* El texto debajo del emoji */
+.emocion-btn .label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+/* ==================== Hover States ==================== */
 .emocion-btn:hover {
-  transform: scale(1.05);
-  border-color: var(--primary-color);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.emocion-btn.activa {
-  background: var(--primary-color);
-  border-color: var(--primary-color);
-  transform: scale(1.1);
-  box-shadow: var(--shadow-md);
+.emocion-btn:hover .emoji {
+  transform: scale(1.2) rotate(-5deg);
+  filter: grayscale(0);
 }
 
-/* Slider de Energía */
+/* ==================== Estados Activos con Colores Específicos ==================== */
+
+/* Muy feliz - Amarillo */
+.emocion-btn[data-emotion="muy_feliz"].activa {
+  border-color: #FFD93D;
+  background: linear-gradient(135deg, rgba(255, 217, 61, 0.15), rgba(255, 237, 78, 0.15));
+  box-shadow: 
+    0 0 0 4px rgba(255, 217, 61, 0.2),
+    0 8px 25px rgba(255, 217, 61, 0.3);
+}
+
+/* Feliz - Verde */
+.emocion-btn[data-emotion="feliz"].activa {
+  border-color: #6BCF7F;
+  background: linear-gradient(135deg, rgba(107, 207, 127, 0.15), rgba(126, 229, 143, 0.15));
+  box-shadow: 
+    0 0 0 4px rgba(107, 207, 127, 0.2),
+    0 8px 25px rgba(107, 207, 127, 0.3);
+}
+
+/* Neutral - Azul */
+.emocion-btn[data-emotion="neutral"].activa {
+  border-color: #A8DADC;
+  background: linear-gradient(135deg, rgba(168, 218, 220, 0.15), rgba(184, 229, 231, 0.15));
+  box-shadow: 
+    0 0 0 4px rgba(168, 218, 220, 0.2),
+    0 8px 25px rgba(168, 218, 220, 0.3);
+}
+
+/* Triste - Naranja */
+.emocion-btn[data-emotion="triste"].activa {
+  border-color: #F4A460;
+  background: linear-gradient(135deg, rgba(244, 164, 96, 0.15), rgba(255, 179, 71, 0.15));
+  box-shadow: 
+    0 0 0 4px rgba(244, 164, 96, 0.2),
+    0 8px 25px rgba(244, 164, 96, 0.3);
+}
+
+/* Muy triste - Rosa */
+.emocion-btn[data-emotion="muy_triste"].activa {
+  border-color: #E88D9E;
+  background: linear-gradient(135deg, rgba(232, 141, 158, 0.15), rgba(255, 165, 184, 0.15));
+  box-shadow: 
+    0 0 0 4px rgba(232, 141, 158, 0.2),
+    0 8px 25px rgba(232, 141, 158, 0.3);
+}
+
+/* Efectos del emoji y label cuando está activo */
+.emocion-btn.activa .emoji {
+  transform: scale(1.3);
+  filter: grayscale(0);
+  animation: bounceEmoji 0.5s ease;
+}
+
+.emocion-btn.activa .label {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ==================== Animaciones ==================== */
+@keyframes bounceEmoji {
+  0%, 100% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+  .emocion-selector {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: var(--spacing-sm);
+  }
+  
+  .emocion-btn .emoji {
+    font-size: 2.5rem;
+  }
+  
+  .emocion-btn {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .emocion-selector {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .emocion-btn .emoji {
+    font-size: 2rem;
+  }
+  
+  .emocion-btn .label {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* ==================== Accesibilidad ==================== */
+.emocion-btn:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Efecto de presionar */
+.emocion-btn:active {
+  transform: translateY(-2px);
+  transition-duration: 0.1s;
+}
+
+/* ==================== Slider de Energía ==================== */
 .energia-slider {
   width: 100%;
   height: 8px;
@@ -199,6 +340,21 @@
   box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.1);
 }
 
+.energia-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+}
+
+.energia-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.1);
+}
+
 .energia-valor {
   display: inline-block;
   margin-left: var(--spacing-sm);
@@ -207,7 +363,7 @@
   font-size: var(--font-size-lg);
 }
 
-/* ==================== Botones del Formulario ==================== */
+/* ==================== Botones del Formulario (MEJORADOS) ==================== */
 .form-actions {
   display: flex;
   gap: var(--spacing-md);
@@ -216,7 +372,7 @@
 
 .btn-guardar {
   flex: 1;
-  padding: 14px 24px;
+  padding: 14px 28px;
   background: linear-gradient(135deg, #4CAF50, #45a049);
   color: white;
   border: none;
@@ -228,34 +384,88 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-sm);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  min-width: auto;
 }
 
 .btn-guardar:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(135deg, #45a049, #4CAF50);
+}
+
+.btn-guardar:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
 .btn-guardar:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
-.btn-limpiar {
+.btn-limpiar,
+.btn-eliminar {
+  flex: 1;
   padding: 14px 24px;
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-sm);
+  background: rgb(235, 235, 235);
+  color: var(--text-secondary);
   font-weight: 600;
   font-size: var(--font-size-base);
   cursor: pointer;
   transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
 }
 
-.btn-limpiar:hover {
-  background: var(--border-color);
-  transform: translateY(-1px);
+.btn-limpiar:hover,
+.btn-eliminar:hover {
+  background: #EF5350;
+  border-color: #EF5350;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
+}
+
+.btn-limpiar:active,
+.btn-eliminar:active {
+  transform: translateY(0);
+}
+
+/* ==================== Botón Nueva Entrada (Azul) ==================== */
+.btn-nueva {
+  flex: 1;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-nueva:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+}
+
+.btn-nueva:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 /* ==================== Historial de Entradas ==================== */
@@ -370,7 +580,7 @@
   font-size: var(--font-size-base);
 }
 
-/* Acciones de la Entrada */
+/* ==================== Acciones de la Entrada (MEJORADAS) ==================== */
 .entrada-actions {
   display: flex;
   gap: var(--spacing-sm);
@@ -378,10 +588,11 @@
   border-top: 1px solid var(--border-color);
 }
 
-.btn-editar-entrada,
-.btn-eliminar-entrada {
+.btn-editar-entrada {
   flex: 1;
-  padding: 8px 16px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
   border: none;
   border-radius: var(--border-radius-sm);
   font-weight: 600;
@@ -392,27 +603,46 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-xs);
-}
-
-.btn-editar-entrada {
-  background: var(--primary-color);
-  color: white;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
 }
 
 .btn-editar-entrada:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-editar-entrada:active {
+  transform: translateY(0);
 }
 
 .btn-eliminar-entrada {
-  background: var(--bg-tertiary);
+  flex: 1;
+  padding: 10px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  background: white;
   color: var(--text-secondary);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
 }
 
 .btn-eliminar-entrada:hover {
-  background: var(--danger-color);
+  background: #EF5350;
+  border-color: #EF5350;
   color: white;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.3);
+}
+
+.btn-eliminar-entrada:active {
+  transform: translateY(0);
 }
 
 /* ==================== Estados Vacíos ==================== */
@@ -442,6 +672,17 @@
   font-size: var(--font-size-lg);
 }
 
+/* ==================== Accesibilidad ==================== */
+.emocion-btn:focus-visible,
+.btn-vista:focus-visible,
+.btn-guardar:focus-visible,
+.btn-limpiar:focus-visible,
+.btn-editar-entrada:focus-visible,
+.btn-eliminar-entrada:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
 /* ==================== Responsive Design ==================== */
 @media (max-width: 768px) {
   .diario-container {
@@ -460,6 +701,7 @@
   .btn-vista {
     width: 100%;
     justify-content: center;
+    min-width: unset;
   }
 
   .diario-stats {
@@ -472,10 +714,16 @@
 
   .emocion-btn {
     min-width: 60px;
+    padding: 12px 8px;
+    font-size: 1.75rem;
   }
 
   .form-actions {
     flex-direction: column;
+  }
+
+  .btn-guardar {
+    min-width: unset;
   }
 
   .entrada-header {
@@ -524,5 +772,14 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes pulseButton {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
   }
 }

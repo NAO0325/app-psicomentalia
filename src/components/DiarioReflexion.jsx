@@ -194,20 +194,56 @@ const DiarioReflexion = () => {
           {/* Selector de emoción */}
           <div className="form-group">
             <label>¿Cómo te sientes hoy?</label>
-            <div className="emociones-selector">
-              {Object.entries(emojis).map(([key, emoji]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setEmocion(key)}
-                  className={`emocion-btn ${emocion === key ? 'activo' : ''}`}
-                >
-                  <span className="emocion-emoji">{emoji}</span>
-                  <span className="emocion-texto">
-                    {key.replace('_', ' ').charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}
-                  </span>
-                </button>
-              ))}
+            <div className="emocion-selector">
+              <button
+                type="button"
+                className={`emocion-btn ${emocion === 'muy_feliz' ? 'activa' : ''}`}
+                onClick={() => setEmocion('muy_feliz')}
+                data-emotion="muy_feliz"
+              >
+                <span className="emoji">😄</span>
+                <span className="label">Muy feliz</span>
+              </button>
+              
+              <button
+                type="button"
+                className={`emocion-btn ${emocion === 'feliz' ? 'activa' : ''}`}
+                onClick={() => setEmocion('feliz')}
+                data-emotion="feliz"
+              >
+                <span className="emoji">😊</span>
+                <span className="label">Feliz</span>
+              </button>
+              
+              <button
+                type="button"
+                className={`emocion-btn ${emocion === 'neutral' ? 'activa' : ''}`}
+                onClick={() => setEmocion('neutral')}
+                data-emotion="neutral"
+              >
+                <span className="emoji">😐</span>
+                <span className="label">Neutral</span>
+              </button>
+              
+              <button
+                type="button"
+                className={`emocion-btn ${emocion === 'triste' ? 'activa' : ''}`}
+                onClick={() => setEmocion('triste')}
+                data-emotion="triste"
+              >
+                <span className="emoji">😔</span>
+                <span className="label">Triste</span>
+              </button>
+              
+              <button
+                type="button"
+                className={`emocion-btn ${emocion === 'muy_triste' ? 'activa' : ''}`}
+                onClick={() => setEmocion('muy_triste')}
+                data-emotion="muy_triste"
+              >
+                <span className="emoji">😢</span>
+                <span className="label">Muy triste</span>
+              </button>
             </div>
           </div>
 
@@ -263,7 +299,7 @@ const DiarioReflexion = () => {
                 <button
                   type="button"
                   onClick={() => handleEliminar(editando)}
-                  className="btn-eliminar"
+                  className="btn-limpiar"
                 >
                   🗑️ Eliminar
                 </button>
