@@ -15,6 +15,22 @@ export default function DiarioReflexion() {
 
   const { data: entradas, loading, addDocument, updateDocument, deleteDocument } = useFirebaseSync('diarios', []);
 
+  const stats = useMemo(() => {
+    if (entradas.length === 0) return null;
+    const ultimaSemana = entradas.slice(0, 7);
+    const promedioEnergia = ultimaSemana.reduce((acc, e) => acc + (e.energia || 5), 0) / ultimaSemana.length;
+    // calcular días consecutivos
+    let consecutivos = 1;
+    const fechasOrdenadas = entradas.map(e => new Date(e.fecha)).sort((a, b) => b - a);
+    for (let i = 0; i < fechasOrdenadas.length - 1; i++) {
+      const diff = (fechasOrdenadas[i] - fechasOrdenadas[i + 1]) / (1000 * 60 * 60 * 24);
+      if (diff === 1) consecutivos++; else break;
+    }
+    return { total: entradas.length, ultimaSemana: ultimaSemana.length, promedioEnergia: Number(promedioEnergia.toFixed(1)), diasConsecutivos: consecutivos };
+  }, [entradas]);
+
+  const emojis = { 'muy_feliz': '😄', 'feliz': '😊', 'neutral': '😐', 'triste': '😔', 'muy_triste': '😢' };
+
   useEffect(() => {
     const entradaHoy = entradas.find(e => new Date(e.fecha).toDateString() === new Date(fecha).toDateString());
     if (entradaHoy && !editando) {
@@ -55,22 +71,6 @@ export default function DiarioReflexion() {
     await deleteDocument(id);
     limpiarFormulario();
   }
-
-  const stats = useMemo(() => {
-    if (entradas.length === 0) return null;
-    const ultimaSemana = entradas.slice(0, 7);
-    const promedioEnergia = ultimaSemana.reduce((acc, e) => acc + (e.energia || 5), 0) / ultimaSemana.length;
-    // calcular días consecutivos
-    let consecutivos = 1;
-    const fechasOrdenadas = entradas.map(e => new Date(e.fecha)).sort((a, b) => b - a);
-    for (let i = 0; i < fechasOrdenadas.length - 1; i++) {
-      const diff = (fechasOrdenadas[i] - fechasOrdenadas[i + 1]) / (1000 * 60 * 60 * 24);
-      if (diff === 1) consecutivos++; else break;
-    }
-    return { total: entradas.length, ultimaSemana: ultimaSemana.length, promedioEnergia: Number(promedioEnergia.toFixed(1)), diasConsecutivos: consecutivos };
-  }, [entradas]);
-
-  const emojis = { 'muy_feliz': '😄', 'feliz': '😊', 'neutral': '😐', 'triste': '😔', 'muy_triste': '😢' };
 
   return (
     <View

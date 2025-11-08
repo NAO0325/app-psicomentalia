@@ -13,6 +13,11 @@ export default function Login() {
   const { user, login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
+  const showDevInfo = useMemo(
+    () => import.meta.env.DEV && import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true',
+    []
+  );
+
   useEffect(() => {
     if (user) navigate('/', { replace: true });
   }, [user, navigate]);
@@ -22,11 +27,6 @@ export default function Login() {
     const t = setTimeout(() => setError(''), 5000);
     return () => clearTimeout(t);
   }, [error]);
-
-  const showDevInfo = useMemo(
-    () => import.meta.env.DEV && import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true',
-    []
-  );
 
   async function handleSubmit(e) {
     e.preventDefault();

@@ -23,16 +23,6 @@ export default function Registro() {
   const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!error) return;
-    const t = setTimeout(() => setError(''), 5000);
-    return () => clearTimeout(t);
-  }, [error]);
-
-  useEffect(() => {
-    setPasswordStrength(calcPasswordStrength(formData.password));
-  }, [formData.password]);
-
   const passwordStrengthClass = useMemo(() => {
     if (passwordStrength === 0) return '';
     if (passwordStrength === 1) return 'weak';
@@ -46,6 +36,16 @@ export default function Registro() {
     if (passwordStrength === 2) return 'Media';
     return 'Fuerte';
   }, [passwordStrength, formData.password]);
+
+  useEffect(() => {
+    if (!error) return;
+    const t = setTimeout(() => setError(''), 5000);
+    return () => clearTimeout(t);
+  }, [error]);
+
+  useEffect(() => {
+    setPasswordStrength(calcPasswordStrength(formData.password));
+  }, [formData.password]);
 
   function handleChange(name, value) {
     setFormData(prev => ({ ...prev, [name]: value }));

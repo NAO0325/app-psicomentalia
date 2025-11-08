@@ -32,6 +32,10 @@ export default function PlaneadorDia() {
   const fechaActual = useMemo(() => getFechaActual(), []);
   const diaDelMes = useMemo(() => getDiaDelMes(), []);
 
+  const tareasCompletadas = tareas.filter(t => t.completada).length;
+  const tareasPendientes = tareas.length - tareasCompletadas;
+  const progresoDelDia = tareas.length > 0 ? Math.round((tareasCompletadas / tareas.length) * 100) : 0;
+
   useEffect(() => { if (user) cargarTareas(); }, [user]);
 
   async function cargarTareas() {
@@ -88,10 +92,6 @@ export default function PlaneadorDia() {
       setTareas(prev => prev.filter(t => t.id !== tareaId));
     } catch (e) { console.error('Error al eliminar tarea:', e); }
   }
-
-  const tareasCompletadas = tareas.filter(t => t.completada).length;
-  const tareasPendientes = tareas.length - tareasCompletadas;
-  const progresoDelDia = tareas.length > 0 ? Math.round((tareasCompletadas / tareas.length) * 100) : 0;
 
   return (
     <View
