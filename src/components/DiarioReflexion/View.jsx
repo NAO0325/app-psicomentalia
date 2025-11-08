@@ -21,7 +21,8 @@ export default function View({
   onEliminar,
   limpiarFormulario,
   stats,
-  emojis
+  emojis,
+  entradas
 }) {
   if (loading) {
     return (
@@ -102,16 +103,50 @@ export default function View({
         </form>
       ) : (
         <div className="diario-historial">
-          {Array.isArray(stats) && stats.length === 0 ? null : null}
-          <EntradasList emojis={emojis} setFecha={setFecha} setVistaHistorial={setVistaHistorial} onEliminar={onEliminar} />
+          {entradas.length === 0 ? (
+            <div className="sin-entradas">
+              <p>📝 No hay entradas en tu diario aún</p>
+              <p>¡Comienza escribiendo tu primera reflexión!</p>
+            </div>
+          ) : (
+            <div className="entradas-lista">
+              {entradas.map(entrada => (
+                <div key={entrada.id} className="entrada-card">
+                  <div className="entrada-header">
+                    <span className="entrada-fecha">
+                      {new Date(entrada.fecha).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </span>
+                    <div className="entrada-estado">
+                      <span className="entrada-emocion">{emojis[entrada.emocion || 'neutral']}</span>
+                      <span className="entrada-energia">⚡ {entrada.energia || 5}/10</span>
+                    </div>
+                  </div>
+
+                  <div className="entrada-contenido">
+                    {entrada.positivo && (
+                      <div className="entrada-seccion">
+                        <h4>✨ Lo positivo:</h4>
+                        <p>{entrada.positivo}</p>
+                      </div>
+                    )}
+                    {entrada.mejorar && (
+                      <div className="entrada-seccion">
+                        <h4>🎯 A mejorar:</h4>
+                        <p>{entrada.mejorar}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="entrada-actions">
+                    <button onClick={() => { setFecha(entrada.fecha); setVistaHistorial(false); }} className="btn-editar-entrada">✏️ Editar</button>
+                    <button onClick={() => onEliminar(entrada.id)} className="btn-eliminar-entrada">🗑️ Eliminar</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
   );
-}
-
-function EntradasList({ emojis, setFecha, setVistaHistorial, onEliminar }) {
-  // Nota: La lista real debe venir por props; para simplificar, se mantiene en el contenedor y se accede vía closures o puedes ampliarlo para pasar "entradas" como prop.
-  // Este componente es presentacional; si quieres, pásale "entradas" como prop y mapea aquí.
-  return null;
 }

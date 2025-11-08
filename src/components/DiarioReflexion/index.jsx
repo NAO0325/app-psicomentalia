@@ -94,6 +94,7 @@ export default function DiarioReflexion() {
       limpiarFormulario={limpiarFormulario}
       stats={stats}
       emojis={emojis}
+      entradas={entradas}
     />
   );
 }
