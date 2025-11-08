@@ -1,21 +1,21 @@
 /* ==================== Variables Globales ==================== */
 :root {
   /* Colores principales */
-  --primary-color: #4A90E2;
-  --primary-dark: #357ABD;
+  --primary-color: #667eea;
+  --primary-dark: #5568d3;
   --primary-light: #7BB1E8;
   
   /* Colores secundarios */
   --secondary-color: #6C63FF;
   --accent-color: #FF6B9D;
   --success-color: #4CAF50;
-  --warning-color: #FFA726;
+  --warning-color: #FFC107;
   --danger-color: #EF5350;
   --info-color: #29B6F6;
   
   /* Colores de texto */
-  --text-primary: #2C3E50;
-  --text-secondary: #7F8C8D;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
   --text-light: #BDC3C7;
   
   /* Colores de fondo */

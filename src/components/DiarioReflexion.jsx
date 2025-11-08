@@ -1,6 +1,7 @@
 // src/components/DiarioReflexion.jsx
 import React, { useState, useEffect } from 'react';
 import { useFirebaseSync } from '../hooks/useFirebaseSync';
+import '../styles/diario-visual.css';
 
 const DiarioReflexion = () => {
   const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0]);
